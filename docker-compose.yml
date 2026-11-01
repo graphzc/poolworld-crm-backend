@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:9.0.4-ubi8-slim
+    container_name: poolworld-mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=poolworld_pattaya
+    networks:
+      - poolworld-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: poolworld-backend
+    ports:
+      - '8080:8080'
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DATABASE=poolworld_pattaya
+      - JWT_SECRET=poolworld-secret-key-change-in-production
+      - PORT=8080
+    depends_on:
+      - mongodb
+    networks:
+      - poolworld-network
+    volumes:
+      - .:/app
+
+volumes:
+  mongodb_data:
+
+networks:
+  poolworld-network:
+    driver: bridge

@@ -1,0 +1,8 @@
+tmp/
+bin/
+.git/
+.gitignore
+*.md
+.env
+.air.toml
+build-errors.log
